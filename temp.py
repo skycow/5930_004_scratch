@@ -102,7 +102,9 @@ def reluderiv(matin):
 def fwdprop(mat, W):
     z1 = np.dot(mat, W[0])
     a1 = relu(z1)
+    #a1 = a1*(1/np.max(a1))
     z2 = np.dot(a1, W[1])
+    #z2 = z2*(1/np.max(z2))
     yhat = softmax(z2)
     return yhat
 
@@ -117,7 +119,9 @@ def backprop(mat, y, W):
     #fwd prop
     z1 = np.dot(mat, W[0])
     a1 = relu(z1)
+    #a1 = a1*(1/np.max(a1))
     z2 = np.dot(a1, W[1])
+    #z2 = z2*(1/np.max(z2))
     yhat = softmax(z2)
     
     #bck prop
@@ -160,8 +164,8 @@ for i in range(500):
     dJdw1, dJdw2  = backprop(X_train_small, Y_train_small_mat, W)
 
     #update weights
-    W[0] = W[0] - 1 * dJdw1/np.max(np.fabs(dJdw1))
-    W[1] = W[1] - 1 * dJdw2/np.max(np.fabs(dJdw2))
+    W[0] = W[0] - 0.4 * dJdw1/np.max(np.fabs(dJdw1))
+    W[1] = W[1] - 0.4 * dJdw2/np.max(np.fabs(dJdw2))
     
     #W[0] = W[0] + np.fabs(np.min(W[0]))
     #W[1] = W[1] + np.fabs(np.min(W[1]))
