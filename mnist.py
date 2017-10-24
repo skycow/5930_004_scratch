@@ -17,6 +17,7 @@ batch_size = 100
 num_mats = 28*28
 num_hid_neur = 300
 num_outputs = 10
+step_size = 0.4
 
 X_train_small = X_train[0:batch_size]
 Y_train_small = Y_train[0:batch_size]
@@ -63,16 +64,6 @@ def softmax(matin):
                 mat[r][c] = 0
     return mat
 
-def softmaxderiv(mat):
-    temp1 = softmax(mat)
-    return np.multiply(temp1,(1 - temp1))
-
-def sigmoid(mat):
-    return 1/(1+np.exp(-mat))
-
-def sigmoidderiv(mat):
-    return np.exp(-mat)/((1+np.exp(-mat))**2)
-
 def myreluderivcomp(val):
     if(val <= 0):
         return 0
@@ -90,43 +81,30 @@ def reluderiv(matin):
 def fwdprop(mat, W):
     z1 = np.dot(mat, W[0])
     a1 = relu(z1)
-    #a1 = a1*(1/np.max(a1))
     z2 = np.dot(a1, W[1])
-    #z2 = z2*(1/np.max(z2))
     yhat = softmax(z2)
     return yhat
-
-def cel(yhat, y):
-    celsum = 0
-    for n in range(yhat.shape[0]):
-        for i in range(yhat.shape[1]):
-            celsum = celsum + y[n][i]*np.log(yhat[n][i])
 
 def backprop(mat, y, W):
 
     #fwd prop
     z1 = np.dot(mat, W[0])
     a1 = relu(z1)
-    #a1 = a1*(1/np.max(a1))
     z2 = np.dot(a1, W[1])
-    #z2 = z2*(1/np.max(z2))
     yhat = softmax(z2)
 
     #bck prop
-    #temp = softmaxderiv(z2)
-    #delta3 = np.multiply(-(y-yhat),temp)
     delta3 = yhat-y
-    dJdw2 = np.dot(a1.T, delta3)#*(1/a1.shape[0])
+    dJdw2 = np.dot(a1.T, delta3)
 
     delta2 = np.dot(delta3, W[1].T)*reluderiv(z1)
-    dJdw1 = np.dot(mat.T, delta2)#*(1/mat.shape[0])
+    dJdw1 = np.dot(mat.T, delta2)
     return dJdw1, dJdw2
 
-#res = fwdprop(X_train_small, W)
+
 for i in range(500):
     #pick a batch
-    # samp_index = random.sample(range(0, X_train.shape[0]-1), batch_size)
-    # print(samp_index)
+     #samp_index = random.sample(range(0, X_train.shape[0]-1), batch_size)
     #
     # X_train_small = []
     # for index in samp_index:
@@ -152,13 +130,9 @@ for i in range(500):
     dJdw1, dJdw2  = backprop(X_train_small, Y_train_small_mat, W)
 
     #update weights
-    W[0] = W[0] - 0.4 * dJdw1/np.max(np.fabs(dJdw1))
-    W[1] = W[1] - 0.4 * dJdw2/np.max(np.fabs(dJdw2))
+    W[0] = W[0] - step_size * dJdw1/np.max(np.fabs(dJdw1))
+    W[1] = W[1] - step_size * dJdw2/np.max(np.fabs(dJdw2))
 
-    #W[0] = W[0] + np.fabs(np.min(W[0]))
-    #W[1] = W[1] + np.fabs(np.min(W[1]))
-    #W[0] = W[0] / np.max(np.fabs(W[0]))
-    #W[1] = W[1] / np.max(np.fabs(W[1]))
 
 test_size = 30
 
@@ -173,4 +147,13 @@ print(xout)
 for y in Y_test[60:test_size+60]:
     yout.append(y)
 print(yout)
+
+comp = np.matrix(yout)-np.matrix(xout)
+comp2 = comp==0
+
+print(np.around(np.sum(comp2)/comp2.shape[1]*100,2))
+
+print("comp2",comp2)
+
+
 print(Y_test[60:test_size+60])
