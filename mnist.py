@@ -3,7 +3,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 #import matplotlib as mpl
 import numpy as np
 #import random
-
+from datetime import datetime
 
 mnist = input_data.read_data_sets("/tmp/data/")
 
@@ -15,7 +15,7 @@ Y_test = mnist.test.labels.astype("int")
 
 batch_size = 100
 num_mats = 28*28
-num_hid_neur = 300
+num_hid_neur = 30
 num_outputs = 10
 step_size = 0.4
 
@@ -29,8 +29,8 @@ for r in range(batch_size):
 
 W = [];
 
-W.append(np.random.rand(num_mats, num_hid_neur)*0.5*2)
-W.append(np.random.rand(num_hid_neur, num_outputs)*0.5*2)
+W.append(np.random.rand(num_mats, num_hid_neur)*0.5)
+W.append(np.random.rand(num_hid_neur, num_outputs)*0.5)
 
 def myrelucomp(val):
     if(val < 0):
@@ -102,7 +102,7 @@ def backprop(mat, y, W):
     return dJdw1, dJdw2
 
 
-for i in range(500):
+for i in range(50):
     #pick a batch
      #samp_index = random.sample(range(0, X_train.shape[0]-1), batch_size)
     #
@@ -152,6 +152,18 @@ comp = np.matrix(yout)-np.matrix(xout)
 comp2 = comp==0
 
 print(np.around(np.sum(comp2)/comp2.shape[1]*100,2))
+
+f = open('results/results'+datetime.now().strftime("%Y%m%d%H%M%S")+'.txt','w')
+
+#np.set_printoptions(threshold='nan')
+
+f.write(str(np.around(np.sum(comp2)/comp2.shape[1]*100,2))+"\n")
+
+#f.write(str(W[0]))
+
+#f.write(str(W[1])+"\n")
+
+f.close()
 
 #print("comp2",comp2)
 
