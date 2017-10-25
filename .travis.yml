@@ -10,7 +10,5 @@ aftersuccess:
     provider: pages
     skip_cleanup: true
     github_token: $GITHUB
-    target_branch: results
-    local_dir: results
     on:
       branch: master
