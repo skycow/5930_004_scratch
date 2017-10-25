@@ -1,0 +1,14 @@
+language: python
+python:
+  - 3.5
+install:
+  - pip3 install tensorflow
+script:
+  - python mnist.py
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $github
+  on:
+    branch: master
