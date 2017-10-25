@@ -5,10 +5,10 @@ install:
   - pip3 install tensorflow
 script:
   - python mnist.py
-aftersuccess:
-  deploy:
-    provider: pages
-    skip_cleanup: true
-    github_token: $GITHUB
-    on:
-      branch: master
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB
+  on:
+    branch: master
