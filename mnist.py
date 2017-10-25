@@ -1,8 +1,8 @@
 from tensorflow.examples.tutorials.mnist import input_data
-import matplotlib.pyplot as plt
-import matplotlib as mpl
+#import matplotlib.pyplot as plt
+#import matplotlib as mpl
 import numpy as np
-import random
+#import random
 
 
 mnist = input_data.read_data_sets("/tmp/data/")
@@ -136,24 +136,24 @@ for i in range(500):
 
 test_size = 30
 
-res = fwdprop(X_test[60:test_size+60],W)
+res = fwdprop(X_test,W)
 print(np.around(res,5))
 xout = []
 yout = []
 for x in range(res.shape[0]):
     xout.append(np.argmax(res[x]))
-print(xout)
+#print(xout)
 
-for y in Y_test[60:test_size+60]:
+for y in Y_test:
     yout.append(y)
-print(yout)
+#print(yout)
 
 comp = np.matrix(yout)-np.matrix(xout)
 comp2 = comp==0
 
 print(np.around(np.sum(comp2)/comp2.shape[1]*100,2))
 
-print("comp2",comp2)
+#print("comp2",comp2)
 
 
-print(Y_test[60:test_size+60])
+#print(Y_test[60:test_size+60])
