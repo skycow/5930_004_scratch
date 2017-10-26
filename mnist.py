@@ -17,7 +17,7 @@ batch_size = 100
 num_mats = 28*28
 num_hid_neur = 300
 num_outputs = 10
-step_size = 0.2
+step_size = 0.1
 iterations = 500 
 
 X_train_small = X_train[0:batch_size]
