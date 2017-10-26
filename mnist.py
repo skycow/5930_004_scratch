@@ -17,7 +17,8 @@ batch_size = 100
 num_mats = 28*28
 num_hid_neur = 300
 num_outputs = 10
-step_size = 0.3
+step_size = 0.2
+iterations = 500 
 
 X_train_small = X_train[0:batch_size]
 Y_train_small = Y_train[0:batch_size]
@@ -102,7 +103,7 @@ def backprop(mat, y, W):
     return dJdw1, dJdw2
 
 
-for i in range(500):
+for i in range(iterations):
     #pick a batch
     samp_index = random.sample(range(0, X_train.shape[0]-1), batch_size)
     
