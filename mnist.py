@@ -13,12 +13,12 @@ Y_train = mnist.train.labels.astype("int")
 X_test = mnist.test.images
 Y_test = mnist.test.labels.astype("int")
 
-batch_size = 100
+batch_size = 10
 num_mats = 28*28
-num_hid_neur = 300
+num_hid_neur = 30
 num_outputs = 10
 step_size = 0.1
-iterations = 500 
+iterations = 5
 
 X_train_small = X_train[0:batch_size]
 Y_train_small = Y_train[0:batch_size]
@@ -106,7 +106,7 @@ def backprop(mat, y, W):
 for i in range(iterations):
     #pick a batch
     samp_index = random.sample(range(0, X_train.shape[0]-1), batch_size)
-    
+
     X_train_batch = np.zeros((batch_size,28*28))
 
     #X_train_batch = []
