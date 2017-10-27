@@ -1,6 +1,5 @@
 from tensorflow.examples.tutorials.mnist import input_data
-#import matplotlib.pyplot as plt
-#import matplotlib as mpl
+import matplotlib.pyplot as plt
 import numpy as np
 import random
 from datetime import datetime
@@ -109,26 +108,12 @@ for i in range(iterations):
 
     X_train_batch = np.zeros((batch_size,28*28))
 
-    #X_train_batch = []
     for index in range(0,len(samp_index)-1):
         X_train_batch[index] = X_train[samp_index[index]]
-    # print(X_train_small)
-    # print("iter ",i)
-    #
+
     Y_train_batch_mat = np.zeros((batch_size,num_outputs))
     for r in range(batch_size):
         Y_train_batch_mat[r][Y_train[samp_index[r]]] = 1
-
-    #X_train_batch = X_train[batch_size*i:batch_size+batch_size*i]
-    #Y_train_batch = Y_train[batch_size*i:batch_size+batch_size*i]
-
-    #Y_train_batch_mat = np.zeros((batch_size,num_outputs))
-
-    #for r in range(batch_size):
-        #Y_train_small_mat[r][Y_train_small[r]] = 1
-
-    #print(Y_train_small_mat)
-    #print(Y_train_small)
 
     #do back prop
     dJdw1, dJdw2  = backprop(X_train_batch, Y_train_batch_mat, W)
@@ -137,40 +122,17 @@ for i in range(iterations):
     W[0] = W[0] - step_size * dJdw1/np.max(np.fabs(dJdw1))
     W[1] = W[1] - step_size * dJdw2/np.max(np.fabs(dJdw2))
 
-
-test_size = 30
-
 res = fwdprop(X_test,W)
 print(np.around(res,5))
 xout = []
 yout = []
 for x in range(res.shape[0]):
     xout.append(np.argmax(res[x]))
-#print(xout)
 
 for y in Y_test:
     yout.append(y)
-#print(yout)
 
 comp = np.matrix(yout)-np.matrix(xout)
 comp2 = comp==0
 
 print(np.around(np.sum(comp2)/comp2.shape[1]*100,2))
-
-##f = open('results/results'+datetime.now().strftime("%Y%m%d%H%M%S")+'.txt','w')
-
-#np.set_printoptions(threshold='nan')
-
-##f.write(str(np.around(np.sum(comp2)/comp2.shape[1]*100,2))+"\n")
-
-#f.write(str(W[0]))
-
-#f.write(str(W[1])+"\n")
-
-##f.close()
-
-#print("comp2",comp2)
-
-
-#print(Y_test[60:test_size+60])
-#added a comment
