@@ -12,12 +12,12 @@ Y_train = mnist.train.labels.astype("int")
 X_test = mnist.test.images
 Y_test = mnist.test.labels.astype("int")
 
-batch_size = 10
+batch_size = 100
 num_mats = 28*28
-num_hid_neur = 30
+num_hid_neur = 300
 num_outputs = 10
 step_size = 0.1
-iterations = 5
+iterations = 500
 
 X_train_small = X_train[0:batch_size]
 Y_train_small = Y_train[0:batch_size]
@@ -78,6 +78,9 @@ def reluderiv(matin):
             mat[r][c] = myreluderivcomp(matin[r][c])
     return mat
 
+def jerror(jyhat, jy):
+    return (1/10)*np.sum(jyhat-jy)**2
+
 def fwdprop(mat, W):
     z1 = np.dot(mat, W[0])
     a1 = relu(z1)
@@ -85,7 +88,7 @@ def fwdprop(mat, W):
     yhat = softmax(z2)
     return yhat
 
-def backprop(mat, y, W):
+def backprop(mat, backy, W, iteration, rmserrors):
 
     #fwd prop
     z1 = np.dot(mat, W[0])
@@ -94,13 +97,22 @@ def backprop(mat, y, W):
     yhat = softmax(z2)
 
     #bck prop
-    delta3 = yhat-y
+    delta3 = yhat-backy
     dJdw2 = np.dot(a1.T, delta3)
 
     delta2 = np.dot(delta3, W[1].T)*reluderiv(z1)
     dJdw1 = np.dot(mat.T, delta2)
-    return dJdw1, dJdw2
+    return dJdw1, dJdw2,
 
+rmserrors = []
+yout = []
+
+for yiter in Y_test:
+    yout.append(yiter)
+    
+yout_mat = np.zeros((Y_test.shape[0],num_outputs))
+for r in range(batch_size):
+    yout_mat[r][Y_test[r]] = 1    
 
 for i in range(iterations):
     #pick a batch
@@ -116,23 +128,27 @@ for i in range(iterations):
         Y_train_batch_mat[r][Y_train[samp_index[r]]] = 1
 
     #do back prop
-    dJdw1, dJdw2  = backprop(X_train_batch, Y_train_batch_mat, W)
+    dJdw1, dJdw2  = backprop(X_train_batch, Y_train_batch_mat, W, i, rmserrors)
 
     #update weights
     W[0] = W[0] - step_size * dJdw1/np.max(np.fabs(dJdw1))
     W[1] = W[1] - step_size * dJdw2/np.max(np.fabs(dJdw2))
 
+    if(i%50 == 0):
+        errorcalc = jerror(fwdprop(X_test,W),yout_mat)
+        print("MSE on iterration " +str(i)+": " + str(errorcalc))
+        rmserrors.append(errorcalc)
+
+
+
+
 res = fwdprop(X_test,W)
-print(np.around(res,5))
 xout = []
-yout = []
 for x in range(res.shape[0]):
     xout.append(np.argmax(res[x]))
-
-for y in Y_test:
-    yout.append(y)
 
 comp = np.matrix(yout)-np.matrix(xout)
 comp2 = comp==0
 
 print(np.around(np.sum(comp2)/comp2.shape[1]*100,2))
+plt.plot(range(0, iterations, 50),rmserrors)
