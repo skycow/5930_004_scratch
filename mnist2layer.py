@@ -1,3 +1,8 @@
+#Skyler Cowley
+#ECE5930-004
+#Assignment 3
+
+
 from tensorflow.examples.tutorials.mnist import input_data
 #import matplotlib.pyplot as plt
 #import matplotlib as mpl

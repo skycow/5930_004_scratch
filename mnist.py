@@ -1,3 +1,7 @@
+#Skyler Cowley
+#ECE5930-004
+#Assignment 3
+
 from tensorflow.examples.tutorials.mnist import input_data
 import matplotlib.pyplot as plt
 import numpy as np
@@ -79,7 +83,8 @@ def reluderiv(matin):
     return mat
 
 def jerror(jyhat, jy):
-    return (1/10)*np.sum(jyhat-jy)**2
+    #return (1/10)*np.sum(jyhat-jy)**2
+    return np.linalg.norm(jyhat-jy,2)/100
 
 def fwdprop(mat, W):
     z1 = np.dot(mat, W[0])
@@ -102,17 +107,17 @@ def backprop(mat, backy, W, iteration, rmserrors):
 
     delta2 = np.dot(delta3, W[1].T)*reluderiv(z1)
     dJdw1 = np.dot(mat.T, delta2)
-    return dJdw1, dJdw2,
+    return dJdw1, dJdw2
 
 rmserrors = []
 yout = []
 
 for yiter in Y_test:
     yout.append(yiter)
-    
+
 yout_mat = np.zeros((Y_test.shape[0],num_outputs))
 for r in range(batch_size):
-    yout_mat[r][Y_test[r]] = 1    
+    yout_mat[r][Y_test[r]] = 1
 
 for i in range(iterations):
     #pick a batch
