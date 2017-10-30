@@ -121,8 +121,9 @@ num_inputs = 2
 num_hid_neur = 5
 num_hid_neur_2 = 10
 num_outputs = 1
-step_size = 0.1
+step_size = 0.07
 iterations = 1
+beta = 0.8
 
 a = createData()
 
@@ -138,14 +139,22 @@ W.append(np.random.rand(num_inputs, num_hid_neur)*0.5)
 W.append(np.random.rand(num_hid_neur, num_hid_neur_2)*0.5)
 W.append(np.random.rand(num_hid_neur_2, num_outputs)*0.5)
 
+dJdw1p = 0
+dJdw2p = 0
+dJdw3p = 0
+
 for i in range(0,160,2):
     dJdw1, dJdw2, dJdw3  = backprop(X_train[i:i+1], Y_train[i:i+1], W)
 
     #update weights
     if (np.max(np.fabs(dJdw2)) != 0 and np.max(np.fabs(dJdw1)) != 0 and np.max(np.fabs(dJdw3)) != 0):
-        W[0] = W[0] - step_size * dJdw1/np.max(np.fabs(dJdw1))
-        W[1] = W[1] - step_size * dJdw2/np.max(np.fabs(dJdw2))
-        W[2] = W[2] - step_size * dJdw3/np.max(np.fabs(dJdw3))
+        W[0] = W[0] - (step_size * dJdw1/np.max(np.fabs(dJdw1)) + beta * dJdw1p)
+        W[1] = W[1] - (step_size * dJdw2/np.max(np.fabs(dJdw2)) + beta * dJdw2p)
+        W[2] = W[2] - (step_size * dJdw3/np.max(np.fabs(dJdw3)) + beta * dJdw3p)
+        dJdw1p = (step_size * dJdw1/np.max(np.fabs(dJdw1)) + beta * dJdw1p)
+        dJdw2p = (step_size * dJdw2/np.max(np.fabs(dJdw2)) + beta * dJdw2p)
+        dJdw3p = (step_size * dJdw3/np.max(np.fabs(dJdw3)) + beta * dJdw3p)
+
 
     errorcalc = jerror(fwdprop(X_test,W),Y_test)
     print("MSE: " + str(errorcalc))
